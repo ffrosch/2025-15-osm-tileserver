@@ -52,6 +52,8 @@ docker compose up tiles-import
 Setup scripts and env vars:
 
 ```shell
+POLY_FILE=data/region.poly
+
 RENDER_GEO_URL=https://raw.githubusercontent.com/alx77/render_list_geo.pl/master/render_list_geo.pl
 RENDER_GEO_FILE=data/$(basename "${RENDER_GEO_URL}")
 wget -q -O ${RENDER_GEO_FILE} ${RENDER_GEO_URL}
@@ -66,8 +68,6 @@ chmod +x ${POLY2BBOX_FILE}
 Test whether extracting the BBOX works (open the returned url):
 
 ```shell
-POLY_FILE=data/region.poly
-
 # export returned string "left=... right=... top=... bottom=..." to env vars left, right, top, bottom
 for kv in $($POLY2BBOX_FILE $POLY_FILE); do
   export "${kv%%=*}"="${kv#*=}"
@@ -83,11 +83,8 @@ MIN_ZOOM=0
 MAX_ZOOM=12
 N_THREADS=20
 
-POLY_FILE_DOCKER=/data/database/region.poly
-POLY2BBOX_FILE_DOCKER=/data/database/$(basename "${POLY2BBOX_URL}")
 RENDER_GEO_FILE_DOCKER=/data/database/$(basename "${RENDER_GEO_URL}")
-
-BBOX=$($POLY2BBOX_FILE_DOCKER $POLY_FILE_DOCKER | sed -E 's/left=/-x /; s/right=/-X /; s/top=/-Y /; s/bottom=/-y /')
+BBOX=$($POLY2BBOX_FILE $POLY_FILE | sed -E 's/left=/-x /; s/right=/-X /; s/top=/-Y /; s/bottom=/-y /')
 docker compose exec -it tiles bash -c "$RENDER_GEO_FILE_DOCKER $BBOX -a -z $MIN_ZOOM -Z $MAX_ZOOM -n $N_THREADS"
 ```
 
