@@ -1,0 +1,37 @@
+services:
+
+  tiles:
+    restart: unless-stopped
+    container_name: tiles
+    image: overv/openstreetmap-tile-server:latest
+    volumes:
+      - ./data/:/data/database/
+      - ./tiles/:/data/tiles/
+    ports:
+      - "127.0.0.1:8080:80"
+    environment:
+      THREADS: 8
+      # (Optional) default=800, max RAM Cache
+      OSM2PGSQL_EXTRA_ARGS: "-C 4096"
+      ALLOW_CORS: "enabled"
+      UPDATES: "enabled"
+      REPLICATION_URL: https://planet.openstreetmap.org/replication/minute/
+      MAX_INTERVAL_SECONDS: 60
+    command: "run"
+
+  tiles-import:
+    container_name: tiles-import
+    image: overv/openstreetmap-tile-server:latest
+    volumes:
+      - ./pbf/${PBF_FILE:?error}:/data/region.osm.pbf
+      - ./pbf/${POLY_FILE:?error}:/data/region.poly
+      - ./data/:/data/database/
+      - ./tiles/:/data/tiles/
+    environment:
+      THREADS: 10
+      # (Optional) default=800, max RAM Cache
+      OSM2PGSQL_EXTRA_ARGS: "-C 4096"
+      ALLOW_CORS: "enabled"
+      UPDATES: "enabled"
+    command: "import"
+
