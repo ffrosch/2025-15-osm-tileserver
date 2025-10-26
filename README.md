@@ -117,3 +117,7 @@ docker compose up -d tiles
 - [Geofabrik - Baden-Wuerttemberg](https://download.geofabrik.de/europe/germany/baden-wuerttemberg.html)
 - [Bytepark - Einen eigenen OpenStreetMap Tileserver betreiben](https://www.bytepark.de/blog/einen-eigenen-openstreetmap-tileserver-betreiben)
 - [switch2osm.org - serving your own tiles](https://switch2osm.org/serving-tiles/)
+
+## Alternatives
+
+- [Pre-generate OpenMapTiles for Europe - Europa im Detail: So erstellst du deinen eigenen OpenStreetMap-Server](https://reifschneider.digital/blog/europa-openstreetmap-server-erstellen?lang=en)
